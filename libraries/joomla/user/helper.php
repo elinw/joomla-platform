@@ -298,7 +298,7 @@ abstract class JUserHelper
 	 *                                  If not present, a new salt will be
 	 *                                  generated.
 	 * @param   string   $encryption    The kind of password encryption to use.
-	 *                                  Defaults to md5-hex.
+	 *                                  Defaults to $defaultEncryption from the JUser.
 	 * @param   boolean  $show_encrypt  Some password systems prepend the kind of
 	 *                                  encryption to the crypted password ({SHA},
 	 *                                  etc). Defaults to false.
@@ -306,9 +306,16 @@ abstract class JUserHelper
 	 * @return  string  The encrypted password.
 	 *
 	 * @since   11.1
+	 * @deprecated 13.2
 	 */
-	public static function getCryptedPassword($plaintext, $salt = '', $encryption = 'md5-hex', $show_encrypt = false)
+	public static function getCryptedPassword($plaintext, $salt = '', $encryption = null, $show_encrypt = false)
 	{
+		if (!$encryption)
+		{
+			$user = JUser::getInstance();
+			$encryption = $user->get('defaultEncryption');
+		}
+
 		// Get the salt to use.
 		$salt = self::getSalt($encryption, $salt, $plaintext);
 
@@ -407,7 +414,7 @@ abstract class JUserHelper
 	 * in the generation of the salt.
 	 *
 	 * @param   string  $encryption  The kind of password encryption to use.
-	 *                               Defaults to md5-hex.
+	 *                               Defaults to $defaultEncryption from JUser.
 	 * @param   string  $seed        The seed to get the salt from (probably a
 	 *                               previously generated password). Defaults to
 	 *                               generating a new seed.
@@ -417,9 +424,16 @@ abstract class JUserHelper
 	 * @return  string  The generated or extracted salt.
 	 *
 	 * @since   11.1
+	 * @deprecated 13.2
 	 */
-	public static function getSalt($encryption = 'md5-hex', $seed = '', $plaintext = '')
+	public static function getSalt($encryption = null, $seed = '', $plaintext = '')
 	{
+		if (!$encryption)
+		{
+			$user = JUser::getInstance();
+			$encryption = $user->get('defaultEncryption');
+		}
+
 		// Encrypt the password.
 		switch ($encryption)
 		{

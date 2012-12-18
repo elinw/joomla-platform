@@ -58,7 +58,7 @@ class JUser extends JObject
 	public $email = null;
 
 	/**
-	 * MD5 encrypted password
+	 * Encrypted password
 	 *
 	 * @var    string
 	 * @since  11.1
@@ -199,6 +199,14 @@ class JUser extends JObject
 	protected static $instances = array();
 
 	/**
+	 * Hasher to use
+	 *
+	 * @var    JCryptPassword
+	 * @since  12.3
+	 */
+	protected $hasher;
+
+	/**
 	 * Constructor activating the default information of the language
 	 *
 	 * @param   integer  $identifier  The primary key of the user to load (optional).
@@ -290,7 +298,7 @@ class JUser extends JObject
 	 *
 	 * @param   string  $key    Parameter key
 	 * @param   mixed   $value  Parameter value
-	 *
+	 *f
 	 * @return  mixed  Set parameter value
 	 *
 	 * @since   11.1
@@ -539,12 +547,9 @@ class JUser extends JObject
 
 			$this->password_clear = JArrayHelper::getValue($array, 'password', '', 'string');
 
-			$salt = JUserHelper::genRandomPassword(32);
-			$crypt = JUserHelper::getCryptedPassword($array['password'], $salt);
-			$array['password'] = $crypt . ':' . $salt;
+			$this->getHasher()->create($array['password']);
 
 			// Set the registration timestamp
-
 			$this->set('registerDate', JFactory::getDate()->toSql());
 		}
 		else
@@ -561,9 +566,7 @@ class JUser extends JObject
 
 				$this->password_clear = JArrayHelper::getValue($array, 'password', '', 'string');
 
-				$salt = JUserHelper::genRandomPassword(32);
-				$crypt = JUserHelper::getCryptedPassword($array['password'], $salt);
-				$array['password'] = $crypt . ':' . $salt;
+				$this->getHasher()->create($array['password']);
 			}
 			else
 			{
@@ -831,5 +834,38 @@ class JUser extends JObject
 		}
 
 		return true;
+	}
+
+	/**
+	 * Sets the hasher for passwords
+	 *
+	 * @param   JCryptPassword  $hasher  The hasher to use.
+	 *
+	 * @return  void
+	 *
+	 * @since   13.1
+	 */
+	public function setHasher($hasher)
+	{
+		$this->hasher = $hasher;
+
+		return;
+	}
+
+	/**
+	 * Creates a hasher if one does not exist
+	 *
+	 * @return  JCryptPassword  $type  The hasher
+	 *
+	 * @since   13.1
+	 */
+	protected function getHasher()
+	{
+		if (!is_null($this->hasher))
+		{
+			$this->hasher = new JCryptPasswordSimple;
+		}
+
+		return $this->hasher;
 	}
 }
