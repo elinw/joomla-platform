@@ -1306,7 +1306,7 @@ class JDatabaseDriverPostgresql extends JDatabaseDriver
 	 * Updates a row in a table based on an object's properties.
 	 *
 	 * @param   string   $table    The name of the database table to update.
-	 * @param   object   $object  A reference to an object whose public properties match the table fields.
+	 * @param   object   $object   An object whose public properties match the table fields.
 	 * @param   string   $key      The name of the primary key.
 	 * @param   boolean  $nulls    True to update null fields or false to ignore them.
 	 *
