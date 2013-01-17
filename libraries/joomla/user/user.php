@@ -202,7 +202,7 @@ class JUser extends JObject
 	 * Hasher to use
 	 *
 	 * @var    JCryptPassword
-	 * @since  12.3
+	 * @since  13.1
 	 */
 	protected $hasher;
 
@@ -298,7 +298,7 @@ class JUser extends JObject
 	 *
 	 * @param   string  $key    Parameter key
 	 * @param   mixed   $value  Parameter value
-	 *f
+	 *
 	 * @return  mixed  Set parameter value
 	 *
 	 * @since   11.1
