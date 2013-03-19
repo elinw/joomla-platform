@@ -367,14 +367,9 @@ abstract class JFactory
 	 */
 	public static function getFeedParser($url, $cache_time = 0)
 	{
-		if (!class_exists('JSimplepieFactory'))
-		{
-			throw new BadMethodCallException('JSimplepieFactory not found');
-		}
+		JLog::add(__METHOD__ . ' has been removed.   Use JFeedFactory::getFeed() instead.', JLog::WARNING, 'deprecated');
 
-		JLog::add(__METHOD__ . ' is deprecated.   Use JSimplepieFactory::getFeedParser() instead.', JLog::WARNING, 'deprecated');
-
-		return JSimplepieFactory::getFeedParser($url, $cache_time);
+		return JFeedFactory::getFeedParser($url);
 	}
 
 	/**
